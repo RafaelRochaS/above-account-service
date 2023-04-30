@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"log"
 
 	"github.com/RafaelRochaS/above-account-service/models"
@@ -37,4 +38,14 @@ func (dbConn DbConn) Create(user *models.User) error {
 
 		return nil
 	})
+}
+
+func (dbConn DbConn) CheckConn() error {
+	if sqlDb, err := dbConn.db.DB(); err == nil {
+		if err = sqlDb.Ping(); err == nil {
+			return nil
+		}
+	}
+
+	return errors.New("failed to connect to DB")
 }

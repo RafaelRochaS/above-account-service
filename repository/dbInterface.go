@@ -6,6 +6,7 @@ type IDBConn interface {
 	InstantiateDbConn() error
 	Migrate()
 	Create(*models.User) error
+	CheckConn() error
 	// Update(models.User) error
 	// GetOne(int) (error, models.User)
 	// GetMany(int) (error, models.User)
