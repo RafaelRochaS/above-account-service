@@ -15,8 +15,11 @@ type Server struct {
 	dbConn repository.IDBConn
 }
 
-func RegisterAccountService(server *grpc.Server) {
-	pb.RegisterUserServer(server, &Server{})
+func RegisterAccountService(grpcServer *grpc.Server, dbConn repository.IDBConn) {
+	server := &Server{
+		dbConn: dbConn,
+	}
+	pb.RegisterUserServer(grpcServer, server)
 }
 
 func (s *Server) CreateUser(ctx context.Context, input *pb.UserCreateRequest) (*pb.UserCreateReply, error) {

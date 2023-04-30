@@ -6,6 +6,7 @@ import (
 	"net"
 
 	"github.com/RafaelRochaS/above-account-service/handlers"
+	"github.com/RafaelRochaS/above-account-service/repository"
 	"github.com/RafaelRochaS/above-account-service/utils"
 	"google.golang.org/grpc"
 )
@@ -23,7 +24,12 @@ func startServer() {
 	}
 
 	server := grpc.NewServer()
-	handlers.RegisterAccountService(server)
+	dbConn := &repository.DbConn{}
+	if err = dbConn.InstantiateDbConn(); err != nil {
+		log.Fatalf("AccountService :: failed to instantiate DB: %v", err)
+	}
+
+	handlers.RegisterAccountService(server, dbConn)
 	log.Printf("AccountService :: listening at %v", listener.Addr())
 
 	if err := server.Serve(listener); err != nil {
